@@ -2,7 +2,6 @@
   #include<stdio.h>
   #include<errno.h>
   #include<sys/mman.h>
-  #include<linux/videodev2.h>
   #include<sys/ioctl.h>
   #include<unistd.h>
   #include<fcntl.h>
@@ -39,4 +38,14 @@
           exit(-1);  
         }  
       }
+	unsigned int i;
+        enum v4lf2_buf_type buf;
+        for(i=0;i<4;i++)
+        {
+                struct v4l2_buffer buf;
+                buf.type=V4L2_BUF_TYPE_VIDEO_CAPTURE;
+                buf.memory=V4L2_MEMORY_MMAP;
+                buf.index=i;
+                ioctl(fd,VIDIOC_QBUF,&buf);//放入图像采集缓冲采集队列
+        }
   }
